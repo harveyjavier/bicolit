@@ -1,0 +1,67 @@
+# Bicol IT App
+
+An entry for Flutter Hackathon 2019, Philippines.
+
+# Screenshots
+
+<img height="480px" src="raw/sc12.png">
+<img height="480px" src="raw/sc1.png">
+<img height="480px" src="raw/sc2.png">
+<img height="480px" src="raw/sc3.png">
+<img height="480px" src="raw/sc4.png">
+<img height="480px" src="raw/sc5.png">
+<img height="480px" src="raw/sc6.png">
+<img height="480px" src="raw/sc7.png">
+<img height="480px" src="raw/sc8.png">
+<img height="480px" src="raw/sc9.png">
+<img height="480px" src="raw/sc10.png">
+<img height="480px" src="raw/sc11.png">
+
+## Setup
+
+### Missing Key.Properties file
+
+Running the project straight away will get you an error regarding a `key.properties` file that is missing. To fix it,
+
+1.  Open android/app/build.gradle file and comment the following lines-
+
+```
+//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+signingConfigs {
+// release {
+// keyAlias keystoreProperties['keyAlias']
+// keyPassword keystoreProperties['keyPassword']
+// storeFile file(keystoreProperties['storeFile'])
+// storePassword keystoreProperties['storePassword']
+// }
+}
+buildTypes {
+// release {
+// signingConfig signingConfigs.release
+// }
+}
+```
+
+2.  Open the project on your cmd or terminal, type flutter run, then you're good to go!
+
+```
+flutter run
+```
+
+## Developer
+
+### Harvz
+
+Hi! I'm Harvz, the developer of this project. Let's get connected!
+
+<a href="https://play.google.com/store/apps/dev?id=4935714394750436171"><img src="raw/play-store-icon.png" width="60"></a>
+<a href="https://www.linkedin.com/in/harvz/"><img src="raw/linkedin-icon.png" width="60"></a>
+<a href="https://www.facebook.com/harvzjavier"><img src="raw/facebook-icon.png" width="60"></a>
+<a href="https://www.instagram.com/harvzjavier/"><img src="raw/instagram-icon.png" width="60"></a>
+
+## License
+
+```
+Insert MIT license here.
+```

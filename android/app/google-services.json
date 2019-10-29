@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "816126813290",
+    "firebase_url": "https://bicol-it.firebaseio.com",
+    "project_id": "bicol-it",
+    "storage_bucket": "bicol-it.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816126813290:android:e493ecb7b3f935dfda9613",
+        "android_client_info": {
+          "package_name": "com.bicolit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816126813290-0pcrppphihsrg0l77mu0atufqj5gpn2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2x58fAp63IdLwtbxVFgc9MAxUcwxvVMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816126813290-0pcrppphihsrg0l77mu0atufqj5gpn2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
