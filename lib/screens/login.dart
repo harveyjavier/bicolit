@@ -6,7 +6,7 @@ import 'package:email_validator/email_validator.dart';
 import 'dart:io';
 
 import 'package:bicolit/tools/textFieldIconButton.dart';
-import 'package:bicolit/screens/newsFeed.dart';
+import 'package:bicolit/screens/news_feed.dart';
 
 class Login extends StatefulWidget {
   @override

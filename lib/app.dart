@@ -5,9 +5,9 @@ import 'package:bicolit/utils/uidata.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:bicolit/screens/login.dart';
-import 'package:bicolit/screens/registerOne.dart';
-import 'package:bicolit/screens/registerTwo.dart';
-import 'package:bicolit/screens/newsFeed.dart';
+import 'package:bicolit/screens/register_one.dart';
+import 'package:bicolit/screens/register_two.dart';
+import 'package:bicolit/screens/news_feed.dart';
 //import 'package:bicolit/screens/profile.dart';
 import 'package:bicolit/screens/edit_education.dart';
 import 'package:bicolit/screens/edit_experience.dart';
