@@ -7,10 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bicolit/screens/login.dart';
 import 'package:bicolit/screens/registerOne.dart';
 import 'package:bicolit/screens/registerTwo.dart';
-// import 'package:bicolit/screens/registerThree.dart';
-// import 'package:bicolit/screens/registerFour.dart';
-//import 'package:bicolit/screens/newsFeed.dart';
+import 'package:bicolit/screens/newsFeed.dart';
 //import 'package:bicolit/screens/profile.dart';
+import 'package:bicolit/screens/edit_education.dart';
+import 'package:bicolit/screens/edit_experience.dart';
 //import 'package:bicolit/screens/notfound_page.dart';
 
 class App extends StatelessWidget {
@@ -43,10 +43,10 @@ class App extends StatelessWidget {
         UIData.loginRoute: (BuildContext context) => Login(),
         UIData.registerOneRoute: (BuildContext context) => RegisterOne(),
         UIData.registerTwoRoute: (BuildContext context) => RegisterTwo(),
-        // UIData.registerThreeRoute: (BuildContext context) => RegisterThree(),
-        // UIData.registerFourRoute: (BuildContext context) => RegisterFour(),
-        //UIData.newsFeedRoute: (BuildContext context) => NewsFeed(),
+        UIData.newsFeedRoute: (BuildContext context) => NewsFeed(),
         //UIData.profileRoute: (BuildContext context) => Profile(),
+        UIData.editEducationRoute: (BuildContext context) => EditEducation(),
+        UIData.editExperienceRoute: (BuildContext context) => EditExperience(),
       },
       // onUnknownRoute: (RouteSettings rs) => new MaterialPageRoute(
       //   builder: (context) => new NotFoundPage(

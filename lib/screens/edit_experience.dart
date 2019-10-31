@@ -6,21 +6,21 @@ import 'package:email_validator/email_validator.dart';
 import 'dart:async';
 
 import 'package:bicolit/tools/textFieldIconButton.dart';
-import 'package:bicolit/tools/registerFourForm.dart';
+import 'package:bicolit/tools/experienceForm.dart';
 import 'package:bicolit/model/experience.dart';
 
-class RegisterFour extends StatefulWidget {
+class EditExperience extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _RegisterFourState();
+  State<StatefulWidget> createState() => _EditExperienceState();
 }
 
-class _RegisterFourState extends State<RegisterFour> {
+class _EditExperienceState extends State<EditExperience> {
   final db = Firestore.instance;
   final storage = LocalStorage("data");
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Experience> _experience = [];
-  List<RegisterFourForm> _forms = [];
+  List<ExperienceForm> _forms = [];
   bool _canAdd = true;
 
   @override
@@ -51,7 +51,7 @@ class _RegisterFourState extends State<RegisterFour> {
   Widget build(BuildContext context) {
     _forms.clear();
     for (int i=0; i<_experience.length; i++){
-      _forms.add(RegisterFourForm(
+      _forms.add(ExperienceForm(
         key: GlobalKey(),
         experience: _experience[i],
         delete: () => deleteFields(i),
@@ -64,7 +64,7 @@ class _RegisterFourState extends State<RegisterFour> {
         backgroundColor: Colors.black,
         actions: <Widget>[
           FlatButton(
-            child: Text("Next", style: TextStyle(color: Colors.white),),
+            child: Text("Submit", style: TextStyle(color: Colors.white),),
             onPressed: next,
           ),
         ],
