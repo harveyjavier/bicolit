@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:bicol_it_app/utils/uidata.dart';
+import 'package:bicolit/utils/uidata.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:bicol_it_app/screens/login.dart';
+import 'package:bicolit/screens/login.dart';
 
 class AppDrawer extends StatefulWidget {
   String current_screen;

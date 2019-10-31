@@ -5,8 +5,8 @@ import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
 import 'dart:io';
 
-import 'package:bicolit/tools/textFieldIconButton.dart';
-//import 'package:bicolit/screens/newsFeed.dart';
+import 'package:bicolit/tools/text_field_icon_button.dart';
+import 'package:bicolit/screens/news_feed.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    //if (storage.getItem("user_data") == null) {
+    if (storage.getItem("user_data") == null) {
       return WillPopScope(
         onWillPop: _onBack,
         child: Scaffold(
@@ -77,8 +77,8 @@ class _LoginState extends State<Login> {
           ),
         ),
       );
-    //} else
-      //{ return NewsFeed(); }
+    } else
+      { return NewsFeed(); }
   }
 
   loginBody() => SingleChildScrollView(

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:bicol_it_app/model/education.dart';
+import 'package:bicolit/model/education.dart';
 
-typedef RegisterThreeDeleteForm();
+typedef EducationDeleteForm();
 
-class RegisterThreeForm extends StatefulWidget {
+class EducationForm extends StatefulWidget {
   final Education education;
-  final state = _RegisterThreeFormState();
-  final RegisterThreeDeleteForm delete;
+  final state = _EducationFormState();
+  final EducationDeleteForm delete;
 
-  RegisterThreeForm({Key key, this.education, this.delete}): super(key: key);
+  EducationForm({Key key, this.education, this.delete}): super(key: key);
 
   @override
   State<StatefulWidget> createState() => state;
@@ -16,7 +16,7 @@ class RegisterThreeForm extends StatefulWidget {
   bool isValid() => state.validate();
 }
 
-class _RegisterThreeFormState extends State<RegisterThreeForm> {
+class _EducationFormState extends State<EducationForm> {
   final _formKey = GlobalKey<FormState>();
 
   @override

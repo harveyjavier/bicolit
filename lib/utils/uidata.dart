@@ -8,10 +8,11 @@ class UIData {
   static const String loginRoute = "/login";
   static const String registerOneRoute = "/registerOne";
   static const String registerTwoRoute = "/registerTwo";
-  // static const String registerThreeRoute = "/registerThree";
-  // static const String registerFourRoute = "/registerFour";
   static const String newsFeedRoute = "/newsFeed";
   static const String profileRoute = "/profile";
+  static const String editEducationRoute = "/editEducation";
+  static const String editExperienceRoute = "/editExperience";
+  static const String notFoundRoute = "/notFound";
 
   //strings
   static const String appName = "Bicol IT Org.";

@@ -34,7 +34,15 @@ buildTypes {
 }
 ```
 
-2.  Open the project on your cmd or terminal, type flutter run, then you're good to go!
+2. Open android/local.properties file and add the following lines-
+
+```
+flutter.buildMode=debug
+flutter.versionName=1.0.0
+flutter.versionCode=1
+```
+
+3.  Open the project on your cmd or terminal, type flutter run, then you're good to go!
 
 ```
 flutter run

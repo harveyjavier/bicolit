@@ -5,7 +5,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:date_format/date_format.dart';
 
-import 'package:bicolit/tools/textFieldIconButton.dart';
+import 'package:bicolit/tools/text_field_icon_button.dart';
 import 'package:bicolit/screens/login.dart';
 
 class RegisterTwo extends StatefulWidget {

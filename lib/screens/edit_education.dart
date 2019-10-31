@@ -5,22 +5,22 @@ import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
 import 'dart:async';
 
-import 'package:bicolit/tools/textFieldIconButton.dart';
-import 'package:bicolit/tools/registerThreeForm.dart';
+import 'package:bicolit/tools/text_field_icon_button.dart';
+import 'package:bicolit/tools/education_form.dart';
 import 'package:bicolit/model/education.dart';
 
-class RegisterThree extends StatefulWidget {
+class EditEducation extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _RegisterThreeState();
+  State<StatefulWidget> createState() => _EditEducationState();
 }
 
-class _RegisterThreeState extends State<RegisterThree> {
+class _EditEducationState extends State<EditEducation> {
   final db = Firestore.instance;
   final storage = LocalStorage("data");
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Education> _education = [];
-  List<RegisterThreeForm> _forms = [];
+  List<EducationForm> _forms = [];
   bool _canAdd = true;
 
   @override
@@ -33,9 +33,7 @@ class _RegisterThreeState extends State<RegisterThree> {
     storage.clear();
   }
 
-  Future<bool> _onBack() {
-    Navigator.pushNamed(context, UIData.registerTwoRoute);
-  }
+  Future<bool> _onBack() {}
 
   void addField() {
     if (_canAdd) {
@@ -55,7 +53,7 @@ class _RegisterThreeState extends State<RegisterThree> {
   Widget build(BuildContext context) {
     _forms.clear();
     for (int i=0; i<_education.length; i++){
-      _forms.add(RegisterThreeForm(
+      _forms.add(EducationForm(
         key: GlobalKey(),
         education: _education[i],
         delete: () => deleteFields(i),
@@ -70,7 +68,7 @@ class _RegisterThreeState extends State<RegisterThree> {
           backgroundColor: Colors.black,
           actions: <Widget>[
             FlatButton(
-              child: Text("Next", style: TextStyle(color: Colors.white),),
+              child: Text("Submit", style: TextStyle(color: Colors.white),),
               onPressed: next,
             ),
             // IconButton(
@@ -103,6 +101,5 @@ class _RegisterThreeState extends State<RegisterThree> {
 
   void next() async {
     _forms.forEach((form) => print(form.isValid()));
-    Navigator.pushNamed(context, UIData.registerFourRoute);
   }
 }

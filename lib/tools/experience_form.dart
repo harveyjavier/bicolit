@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:bicol_it_app/model/experience.dart';
+import 'package:bicolit/model/experience.dart';
 
-typedef RegisterFourDeleteForm();
+typedef ExperienceDeleteForm();
 
-class RegisterFourForm extends StatefulWidget {
+class ExperienceForm extends StatefulWidget {
   final Experience experience;
-  final state = _RegisterFourFormState();
-  final RegisterFourDeleteForm delete;
+  final state = _ExperienceFormState();
+  final ExperienceDeleteForm delete;
 
-  RegisterFourForm({Key key, this.experience, this.delete}): super(key: key);
+  ExperienceForm({Key key, this.experience, this.delete}): super(key: key);
 
   @override
   State<StatefulWidget> createState() => state;
@@ -16,7 +16,7 @@ class RegisterFourForm extends StatefulWidget {
   bool isValid() => state.validate();
 }
 
-class _RegisterFourFormState extends State<RegisterFourForm> {
+class _ExperienceFormState extends State<ExperienceForm> {
   final _formKey = GlobalKey<FormState>();
 
   @override
