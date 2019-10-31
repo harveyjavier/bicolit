@@ -5,7 +5,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
 import 'dart:io';
 
-import 'package:bicolit/tools/textFieldIconButton.dart';
+import 'package:bicolit/tools/text_field_icon_button.dart';
 import 'package:bicolit/screens/news_feed.dart';
 
 class Login extends StatefulWidget {

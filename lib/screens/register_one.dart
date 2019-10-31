@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
 
-import 'package:bicolit/tools/textFieldIconButton.dart';
+import 'package:bicolit/tools/text_field_icon_button.dart';
 
 class RegisterOne extends StatefulWidget {
   @override

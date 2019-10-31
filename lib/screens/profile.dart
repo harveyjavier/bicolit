@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 
-import 'package:bicolit/tools/profile_one_page.dart';
 import 'package:bicolit/tools/common_scaffold.dart';
 
 class Profile extends StatefulWidget {
@@ -35,6 +34,25 @@ class _ProfileState extends State<Profile> {
     print(storage.getItem("user_data"));
   }
 
+  Future<bool> _onBack() {
+    if (_uploading) {
+      return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Please wait", style: TextStyle(color: Colors.white),),
+          content: Text("Upload still in progress..", style: TextStyle(color: Colors.white),),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OKAY", style: TextStyle(color: Colors.white),),
+              onPressed: () => Navigator.pop(context, false),
+            ),
+          ],
+        ),
+      );
+    } else
+      { Navigator.pop(context, true); }
+  }
+
   void upload() async {
     Navigator.pop(context, false);
     setState(() { _uploading = true; });
@@ -42,15 +60,20 @@ class _ProfileState extends State<Profile> {
     final StorageReference ref = FirebaseStorage.instance.ref().child(storage.getItem("user_data")["id"] + "/images/profile/" + uuid.v1() + ".png");
     final StorageUploadTask task = ref.putFile(_image);
     task.events.listen((event) {
-      setState(() { _progress = (event.snapshot.bytesTransferred.toDouble() / event.snapshot.totalByteCount.toDouble()) * 100.0; });
-      if (_progress > 30.0)
-        { setState(() { _upload_message = "Please wait..."; }); }
-      else if (_progress > 60.0)
-        { setState(() { _upload_message = "Few more seconds..."; }); }
-      else if (_progress > 90.0)
-        { setState(() { _upload_message = "Almost done..."; }); }
+      var progress = (event.snapshot.bytesTransferred.toDouble() / event.snapshot.totalByteCount.toDouble()) * 100.0;
+      var upload_message = "";
+      if (progress > 30.0 && progress < 60.0)
+        { upload_message += "Please wait..."; }
+      else if (progress > 60.0 && progress < 90.0)
+        { upload_message += "Few more seconds..."; }
+      else if (progress > 90.0)
+        { upload_message += "Almost done..."; }
       else
-        { setState(() { _upload_message = "Uploading..."; }); }
+        { upload_message += "Uploading..."; }
+      setState(() { 
+        _progress = progress;
+        _upload_message = upload_message;
+      });
     }).onError((error) {
       print(error);
     });
@@ -269,10 +292,13 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     deviceSize = MediaQuery.of(context).size;
-    return CommonScaffold(
-      appTitle: "Profile",
-      bodyData: bodyData(),
-      elevation: 0.0,
+    return WillPopScope(
+      onWillPop: _onBack,
+      child: CommonScaffold(
+        appTitle: "Profile",
+        bodyData: bodyData(),
+        elevation: 0.0,
+      ),
     );
   }
 }

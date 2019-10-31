@@ -12,6 +12,7 @@ class UIData {
   static const String profileRoute = "/profile";
   static const String editEducationRoute = "/editEducation";
   static const String editExperienceRoute = "/editExperience";
+  static const String notFoundRoute = "/notFound";
 
   //strings
   static const String appName = "Bicol IT Org.";

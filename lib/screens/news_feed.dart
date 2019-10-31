@@ -53,6 +53,7 @@ class _NewsFeedState extends State<NewsFeed> {
         drawer: AppDrawer(current_screen: "newsFeed"),
         appBar: AppBar(
           title: Text("NewsFeed"),
+          centerTitle: true,
         ),
         body: Container(),
       ),
