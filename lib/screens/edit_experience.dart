@@ -5,8 +5,8 @@ import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
 import 'dart:async';
 
-import 'package:bicolit/tools/textFieldIconButton.dart';
-import 'package:bicolit/tools/experienceForm.dart';
+import 'package:bicolit/tools/text_field_icon_button.dart';
+import 'package:bicolit/tools/experience_form.dart';
 import 'package:bicolit/model/experience.dart';
 
 class EditExperience extends StatefulWidget {
