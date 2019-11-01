@@ -21,9 +21,7 @@ class _AppDrawerState extends State<AppDrawer> {
     WidgetsBinding.instance.addPostFrameCallback((_) => onMount());
   }
 
-  void onMount() {
-    print(storage.getItem("user_data"));
-  }
+  void onMount() {}
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +37,9 @@ class _AppDrawerState extends State<AppDrawer> {
               storage.getItem("user_data")["email"],
             ),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(storage.getItem("user_data")["profile_image"] == null ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" : storage.getItem("user_data")["profile_image"]),
+              backgroundImage: storage.getItem("user_data")["profile_image"] == null
+                ? AssetImage(UIData.defaultProfileImage)
+                : NetworkImage(storage.getItem("user_data")["profile_image"]),
             ),
           ),
           ListTile(
@@ -51,7 +51,7 @@ class _AppDrawerState extends State<AppDrawer> {
               Icons.web,
               color: Colors.black,
             ),
-            onTap: () { if (widget.current_screen != "newsFeed") Navigator.pushNamed(context, UIData.newsFeedRoute); },
+            onTap: () { widget.current_screen == "newsFeed" ? Navigator.pop(context) : Navigator.pushNamed(context, UIData.newsFeedRoute); }
           ),
           ListTile(
             title: Text(
@@ -62,7 +62,7 @@ class _AppDrawerState extends State<AppDrawer> {
               Icons.person,
               color: Colors.black,
             ),
-            onTap: () { Navigator.pushNamed(context, UIData.profileRoute); },
+            onTap: () { widget.current_screen == "profile" ? Navigator.pop(context) : Navigator.pushNamed(context, UIData.profileRoute); },
           ),
           ListTile(
             title: Text(
@@ -74,6 +74,7 @@ class _AppDrawerState extends State<AppDrawer> {
               color: Colors.black,
             ),
             onTap: () {},
+            //onTap: () { widget.current_screen == "about" ? Navigator.pop(context) : Navigator.pushNamed(context, UIData.aboutRoute); },
           ),
           Divider( color: Colors.grey.shade300, height: 8.0, ),
           ListTile(

@@ -28,6 +28,7 @@ class UIData {
   static const String imageDir = "assets/images";
   static const String bitLogoImage = "$imageDir/bit-logo.png";
   static const String bitLogoTransparentImage = "$imageDir/bit-logo-transparent.png";
+  static const String defaultProfileImage = "$imageDir/default-profile-image.png";
 
   //gneric
   static const String error = "Error";

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'dart:io';
 
 import 'package:bicolit/utils/uidata.dart';
 import 'package:bicolit/tools/drawer.dart';
+import 'package:bicolit/tools/label_icon.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -13,24 +15,83 @@ class NewsFeed extends StatefulWidget {
 }
 
 class _NewsFeedState extends State<NewsFeed> {
-  final storage = LocalStorage("data");
-  final RefreshController _refreshController = RefreshController();
-
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+  final db = Firestore.instance;
+  final storage = LocalStorage("data");
+  final _formKey = GlobalKey<FormState>();
+
+  bool _loading = true;
+  RefreshController _refreshController = RefreshController();
+  List _users = [], _posts = [];
+
   List<Widget> buildList() {
-    return List.generate(
-        15,
-        (index) => Container(
-              height: 100,
-              margin: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 15,
+    return List.generate(_posts.length, (i) =>
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          elevation: 2.0,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {},
+                      child: CircleAvatar(backgroundImage: _posts[i]["user"]["profile_image"] == null
+                        ? AssetImage(UIData.defaultProfileImage)
+                        : NetworkImage(_posts[i]["user"]["profile_image"])),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(_posts[i]["user"]["firstname"] + " " + _posts[i]["user"]["lastname"], style: Theme.of(context).textTheme.body1.apply(fontWeightDelta: 700)),
+                            SizedBox(height: 5.0),
+                            Text(_posts[i]["user"]["email"]),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(_posts[i]["post"]),
               ),
-            ));
+              SizedBox(height: 10.0),
+              _posts[i]["images"].length == 0 ? Image.network(_posts[i]["images"][0], fit: BoxFit.cover) : Container(),
+              _posts[i]["images"].length == 0 ? Container() : Divider(color: Colors.grey.shade300, height: 8.0),
+              FittedBox(
+                fit: BoxFit.contain,
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    LabelIcon(
+                      icon: Icons.favorite, iconColor: Colors.black, onPressed: () {},
+                      label: (_posts[i]["likes"].length > 0 ? _posts[i]["likes"].length : "") + "Likes",
+                    ),
+                    LabelIcon(
+                      icon: Icons.comment, iconColor: Colors.black, onPressed: () {},
+                      label: (_posts[i]["comments"].length > 0 ? _posts[i]["comments"].length : "") + "Comments",
+                    ),
+                    Text(
+                      formatDate(_posts[i]["created_at"].toDate(), [yyyy, " ", M, " ", d, " at ", h, ":", nn, " ", am]),
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -40,7 +101,26 @@ class _NewsFeedState extends State<NewsFeed> {
   }
 
   void onMount() {
-    print(storage.getItem("user_data"));
+    fetchData();
+  }
+
+  void fetchData() async {
+    final QuerySnapshot users_result = await db.collection("users").getDocuments();
+    final QuerySnapshot newsfeed_result = await db.collection("newsfeed").getDocuments();
+    final List<DocumentSnapshot> users_docs = users_result.documents;
+    final List<DocumentSnapshot> newsfeed_docs = newsfeed_result.documents;
+    newsfeed_docs.forEach((nfd) {
+      users_docs.forEach((ud) {
+        if (nfd.data["creator"] == ud.documentID)
+          { nfd.data["user"] = ud.data; }
+      });
+    });
+    setState(() {
+      _users = users_docs;
+      _posts = newsfeed_docs;
+      _loading = false;
+    });
+    _refreshController.refreshCompleted();
   }
 
   Future<bool> _onBack() {
@@ -67,32 +147,63 @@ class _NewsFeedState extends State<NewsFeed> {
     }
   }
 
+  loadScreen() => Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      Image.asset(
+        UIData.bitLogoImage,
+        height: 70,
+        width: 70,
+      ),
+      SizedBox( height: 20.0 ),
+      SizedBox(
+        child: CircularProgressIndicator(
+          strokeWidth: 2.0,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+        ),
+        height: 17.0,
+        width: 17.0,
+      ),
+      SizedBox( height: 20.0 ),
+    ]
+  );
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBack,
-      child: Scaffold(
-        key: _globalKey,
-        drawer: AppDrawer(current_screen: "newsFeed"),
-        appBar: AppBar(
-          title: Text("News Feed"),
-          centerTitle: true,
-        ),
-        //body: Container(),
-        body: SmartRefresher(
-          controller: _refreshController,
-          enablePullDown: true,
-          onRefresh: () async {
-            await Future.delayed(Duration(seconds: 1));
-            _refreshController.refreshCompleted();
-          },
-           child: CustomScrollView(
-            slivers: [
-              SliverList(delegate: SliverChildListDelegate(buildList()))
-            ],
+      child: _loading
+        ? Scaffold(
+            body: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[loadScreen()],
+                ),
+              ),
+            ),
+          )
+        : Scaffold(
+            key: _globalKey,
+            drawer: AppDrawer(current_screen: "newsFeed"),
+            appBar: AppBar(
+              title: Text("News Feed"),
+              centerTitle: true,
+            ),
+            body: SmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              onRefresh: fetchData,
+               child: CustomScrollView(
+                slivers: [SliverList(delegate: SliverChildListDelegate(buildList()))],
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {},
+              child: Icon(Icons.edit),
+              backgroundColor: Colors.black,
+            ),
           ),
-        ),
-      ),
     );
   }
 }

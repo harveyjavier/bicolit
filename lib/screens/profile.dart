@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 
+import 'package:bicolit/utils/uidata.dart';
 import 'package:bicolit/tools/common_scaffold.dart';
 
 class Profile extends StatefulWidget {
@@ -150,7 +151,9 @@ class _ProfileState extends State<Profile> {
                       onTap: getImage,
                       child: CircleAvatar(
                         radius: 40.0,
-                        backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"),
+                        backgroundImage: storage.getItem("user_data")["profile_image"] == null
+                          ? AssetImage(UIData.defaultProfileImage)
+                          : NetworkImage(storage.getItem("user_data")["profile_image"]),
                         child: CircularProgressIndicator(
                           strokeWidth: 3.0,
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.black),

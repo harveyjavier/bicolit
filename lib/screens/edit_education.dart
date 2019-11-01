@@ -68,7 +68,7 @@ class _EditEducationState extends State<EditEducation> {
           backgroundColor: Colors.black,
           actions: <Widget>[
             FlatButton(
-              child: Text("Submit", style: TextStyle(color: Colors.white),),
+              child: Text("Save", style: TextStyle(color: Colors.white),),
               onPressed: next,
             ),
             // IconButton(
