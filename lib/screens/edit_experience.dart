@@ -3,6 +3,7 @@ import 'package:bicolit/utils/uidata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:async';
 
 import 'package:bicolit/tools/text_field_icon_button.dart';
@@ -67,7 +68,7 @@ class _EditExperienceState extends State<EditExperience> {
         SnackBar(
           content: Text("You can add again after a second."),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.orange,
         )
       );
     }
@@ -123,16 +124,40 @@ class _EditExperienceState extends State<EditExperience> {
   }
 
   void save() async {
-    bool isValid;
+    bool isValid = true;
     List experience = [];
+
+    Alert(
+      context: context,
+      title: "Saving...",
+      buttons: [
+        DialogButton(
+          onPressed: () {}, color: Colors.black,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            height: 17.0, width: 17.0,
+          )
+        )
+      ]
+    ).show();
+
     _forms.forEach((form) {
       isValid = form.isValid();
-      if (isValid) experience.add(form.experience);
+      if (isValid) experience.add(form.data());
     });
     if (isValid) {
       await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"experience":experience});
       setState(() { storage.getItem("user_data")["experience"] = experience; });
       Navigator.pop(context);
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Experience background updated successfully."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        )
+      );
     }
   }
 }

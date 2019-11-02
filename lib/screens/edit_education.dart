@@ -3,6 +3,7 @@ import 'package:bicolit/utils/uidata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:async';
 
 import 'package:bicolit/tools/text_field_icon_button.dart';
@@ -63,7 +64,7 @@ class _EditEducationState extends State<EditEducation> {
         SnackBar(
           content: Text("You can add again after a second."),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.orange,
         )
       );
     }
@@ -119,16 +120,41 @@ class _EditEducationState extends State<EditEducation> {
   }
 
   void save() async {
-    bool isValid;
+    bool isValid = true;
     List education = [];
+
+    Alert(
+      context: context,
+      title: "Saving...",
+      buttons: [
+        DialogButton(
+          onPressed: () {}, color: Colors.black,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            height: 17.0, width: 17.0,
+          )
+        )
+      ]
+    ).show();
+
     _forms.forEach((form) {
       isValid = form.isValid();
-      if (isValid) education.add(form.education);
+      print(form.data());
+      if (isValid) education.add(form.data());
     });
     if (isValid) {
       await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"education":education});
       setState(() { storage.getItem("user_data")["education"] = education; });
       Navigator.pop(context);
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Educational background updated successfully."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        )
+      );
     }
   }
 }

@@ -14,6 +14,7 @@ class ExperienceForm extends StatefulWidget {
   State<StatefulWidget> createState() => state;
 
   bool isValid() => state.validate();
+  Map data() => state.getData();
 }
 
 class _ExperienceFormState extends State<ExperienceForm> {
@@ -127,6 +128,17 @@ class _ExperienceFormState extends State<ExperienceForm> {
       ),
     );
   }
+
+  Map getData(){
+    Map data = {};
+    data["company"] = widget.experience.company;
+    data["title"] = widget.experience.title;
+    data["location"] = widget.experience.location;
+    data["start_year"] = widget.experience.start_year;
+    data["end_year"] = widget.experience.end_year;
+    return data;
+  }
+
 
   bool validate(){
     var valid = _formKey.currentState.validate();

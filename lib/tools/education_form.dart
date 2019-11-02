@@ -14,6 +14,7 @@ class EducationForm extends StatefulWidget {
   State<StatefulWidget> createState() => state;
 
   bool isValid() => state.validate();
+  Map data() => state.getData();
 }
 
 class _EducationFormState extends State<EducationForm> {
@@ -126,6 +127,16 @@ class _EducationFormState extends State<EducationForm> {
         ),
       ),
     );
+  }
+
+  Map getData(){
+    Map data = {};
+    data["school"] = widget.education.school;
+    data["degree"] = widget.education.degree;
+    data["field"] = widget.education.field;
+    data["start_year"] = widget.education.start_year;
+    data["end_year"] = widget.education.end_year;
+    return data;
   }
 
   bool validate(){

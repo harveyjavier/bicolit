@@ -18,6 +18,7 @@ class _ProfileState extends State<Profile> {
   final db = Firestore.instance;
   final storage = LocalStorage("data");
   final uuid = Uuid();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   Size deviceSize;
 
   File _image;
@@ -91,6 +92,13 @@ class _ProfileState extends State<Profile> {
         _progress = 0.0;
         _upload_message = "Uploading...";
       });
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Profile image updated successfully."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        )
+      );
     });
   }
 
@@ -105,18 +113,19 @@ class _ProfileState extends State<Profile> {
         builder: (context) => WillPopScope(
           onWillPop: () async => false,
           child: AlertDialog(
-            title: Text("Confirm Upload", style: TextStyle(color: Colors.white),),
-            content: CircleAvatar(
-              radius: 40.0,
-              backgroundImage: FileImage(_image), //Image.file(tempImage)
-            ),
+            title: Text("Confirm Upload", style: TextStyle(color: Colors.black),),
+            content: Image.file(tempImage),
+            // CircleAvatar(
+            //   radius: 40.0,
+            //   backgroundImage: FileImage(_image), //
+            // ),
             actions: <Widget>[
               FlatButton(
-                child: Text("Yes", style: TextStyle(color: Colors.white),),
+                child: Text("Yes", style: TextStyle(color: Colors.black),),
                 onPressed: upload
               ),
               FlatButton(
-                child: Text("Cancel", style: TextStyle(color: Colors.white),),
+                child: Text("Cancel", style: TextStyle(color: Colors.black),),
                 onPressed: () {
                   Navigator.pop(context, false);
                   setState(() { _image = null; });
@@ -413,6 +422,7 @@ class _ProfileState extends State<Profile> {
     return WillPopScope(
       onWillPop: _onBack,
       child: CommonScaffold(
+        scaffoldKey: _scaffoldKey,
         appTitle: "Profile",
         bodyData: bodyData(),
         elevation: 0.0,

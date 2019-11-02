@@ -277,7 +277,7 @@ class _RegisterOneState extends State<RegisterOne> {
           SnackBar(
             content: Text(snackBarText),
             duration: Duration(seconds: 2),
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.red,
           )
         );
       }

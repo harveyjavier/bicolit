@@ -17,9 +17,9 @@ class NewsFeed extends StatefulWidget {
 }
 
 class _NewsFeedState extends State<NewsFeed> {
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   final db = Firestore.instance;
   final storage = LocalStorage("data");
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _postFormKey = GlobalKey<FormState>();
   final _editFormKey = GlobalKey<FormState>();
 
@@ -109,6 +109,22 @@ class _NewsFeedState extends State<NewsFeed> {
                                 child: Text(newValue == "EDIT" ? "EDIT" : "YES", style: TextStyle(color: Colors.white)),
                                 onPressed: newValue == "EDIT"
                                 ? () async {
+                                    Navigator.pop(context);
+                                    Alert(
+                                      context: context,
+                                      title: "Saving...",
+                                      buttons: [
+                                        DialogButton(
+                                          onPressed: () {}, color: Colors.black,
+                                          child: SizedBox(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            ),
+                                            height: 17.0, width: 17.0,
+                                          )
+                                        )
+                                      ]
+                                    ).show();
                                     if (_editFormKey.currentState.validate()) {
                                       _editFormKey.currentState.save();
                                       if (_edit_post_input == _posts[i]["post"]) {
@@ -117,13 +133,44 @@ class _NewsFeedState extends State<NewsFeed> {
                                         await db.collection("newsfeed").document(_posts[i]["id"]).updateData({"post":_edit_post_input, "updated_at":FieldValue.serverTimestamp()});
                                         fetchData();
                                         Navigator.pop(context);
+                                        _scaffoldKey.currentState.showSnackBar(
+                                          SnackBar(
+                                            content: Text("Post updated successfully."),
+                                            duration: Duration(seconds: 2),
+                                            backgroundColor: Colors.green,
+                                          )
+                                        );
                                       }
                                     }
                                   }
                                 : () async {
+                                    Navigator.pop(context);
+                                    Alert(
+                                      context: context,
+                                      title: "Deleting...",
+                                      buttons: [
+                                        DialogButton(
+                                          onPressed: () {}, color: Colors.black,
+                                          child: SizedBox(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            ),
+                                            height: 17.0, width: 17.0,
+                                          )
+                                        )
+                                      ]
+                                    ).show();
+
                                     await db.collection("newsfeed").document(_posts[i]["id"]).delete();
                                     fetchData();
                                     Navigator.pop(context);
+                                    _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text("Post deleted successfully."),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Colors.green,
+                                      )
+                                    );
                                   }
                               )
                             ]
@@ -208,7 +255,7 @@ class _NewsFeedState extends State<NewsFeed> {
   }
 
   Future<bool> _onBack() {
-    if (_globalKey.currentState.isDrawerOpen) {
+    if (_scaffoldKey.currentState.isDrawerOpen) {
       Navigator.pop(context);
     } else {
       return showDialog(
@@ -263,6 +310,13 @@ class _NewsFeedState extends State<NewsFeed> {
       });
       fetchData();
       Navigator.pop(context);
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("You have posted successfully."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        )
+      );
     }
   }
 
@@ -336,7 +390,7 @@ class _NewsFeedState extends State<NewsFeed> {
             ),
           )
         : Scaffold(
-            key: _globalKey,
+            key: _scaffoldKey,
             drawer: AppDrawer(current_screen: "newsFeed"),
             appBar: AppBar(
               title: Text("News Feed"),
