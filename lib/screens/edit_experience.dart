@@ -19,6 +19,7 @@ class _EditExperienceState extends State<EditExperience> {
   final db = Firestore.instance;
   final storage = LocalStorage("data");
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  ScrollController _scrollController = ScrollController();
 
   List<Experience> _experience = [];
   List<ExperienceForm> _forms = [];
@@ -31,7 +32,20 @@ class _EditExperienceState extends State<EditExperience> {
   }
 
   void onMount() {
-
+    List experience = storage.getItem("user_data")["experience"];
+    if (experience.length != 0){
+      for (int i=0; i<experience.length; i++) {
+        setState(() {
+          _experience.add(Experience(
+            company: experience[i]["company"],
+            location: experience[i]["location"],
+            title: experience[i]["title"],
+            start_year: experience[i]["start_year"],
+            end_year: experience[i]["end_year"] == null ? "" : experience[i]["end_year"],
+          ));
+        });  
+      }
+    }
   }
 
   Future<bool> _onBack() {
@@ -44,7 +58,18 @@ class _EditExperienceState extends State<EditExperience> {
         _canAdd = false;
         _experience.add(Experience());
       });
+      Future.delayed(Duration(milliseconds: 500)).then((onvalue) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
       Future.delayed(Duration(seconds: 2)).then((onvalue) { setState(() { _canAdd = true; }); });
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("You can add again after a second."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.black,
+        )
+      );
     }
   }
 
@@ -71,7 +96,7 @@ class _EditExperienceState extends State<EditExperience> {
         actions: <Widget>[
           FlatButton(
             child: Text("Save", style: TextStyle(color: Colors.white),),
-            onPressed: next,
+            onPressed: save,
           ),
         ],
       ),
@@ -85,6 +110,7 @@ class _EditExperienceState extends State<EditExperience> {
           ),
         ),
       ) : ListView.builder(
+        controller: _scrollController,
         itemCount: _experience.length,
         itemBuilder: (_, i) => _forms[i],
       ),
@@ -96,7 +122,17 @@ class _EditExperienceState extends State<EditExperience> {
     );
   }
 
-  void next() async {
-    _forms.forEach((form) => print(form.isValid()));
+  void save() async {
+    bool isValid;
+    List experience = [];
+    _forms.forEach((form) {
+      isValid = form.isValid();
+      if (isValid) experience.add(form.experience);
+    });
+    if (isValid) {
+      await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"experience":experience});
+      setState(() { storage.getItem("user_data")["experience"] = experience; });
+      Navigator.pop(context);
+    }
   }
 }

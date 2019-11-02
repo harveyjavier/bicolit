@@ -19,6 +19,7 @@ class _EditEducationState extends State<EditEducation> {
   final db = Firestore.instance;
   final storage = LocalStorage("data");
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  ScrollController _scrollController = ScrollController();
 
   List<Education> _education = [];
   List<EducationForm> _forms = [];
@@ -31,7 +32,20 @@ class _EditEducationState extends State<EditEducation> {
   }
 
   void onMount() {
-
+    List education = storage.getItem("user_data")["education"];
+    if (education.length != 0){
+      for (int i=0; i<education.length; i++) {
+        setState(() {
+          _education.add(Education(
+            school: education[i]["school"],
+            degree: education[i]["degree"],
+            field: education[i]["field"],
+            start_year: education[i]["start_year"],
+            end_year: education[i]["end_year"] == null ? "" : education[i]["end_year"],
+          ));
+        });  
+      }
+    }
   }
 
   void addField() {
@@ -40,7 +54,18 @@ class _EditEducationState extends State<EditEducation> {
         _canAdd = false;
         _education.add(Education());
       });
+      Future.delayed(Duration(milliseconds: 500)).then((onvalue) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
       Future.delayed(Duration(seconds: 2)).then((onvalue) { setState(() { _canAdd = true; }); });
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("You can add again after a second."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.black,
+        )
+      );
     }
   }
 
@@ -67,7 +92,7 @@ class _EditEducationState extends State<EditEducation> {
         actions: <Widget>[
           FlatButton(
             child: Text("Save", style: TextStyle(color: Colors.white),),
-            onPressed: next,
+            onPressed: save,
           ),
         ],
       ),
@@ -81,6 +106,7 @@ class _EditEducationState extends State<EditEducation> {
           ),
         ),
       ) : ListView.builder(
+        controller: _scrollController,
         itemCount: _education.length,
         itemBuilder: (_, i) => _forms[i],
       ),
@@ -92,7 +118,17 @@ class _EditEducationState extends State<EditEducation> {
     );
   }
 
-  void next() async {
-    _forms.forEach((form) => print(form.isValid()));
+  void save() async {
+    bool isValid;
+    List education = [];
+    _forms.forEach((form) {
+      isValid = form.isValid();
+      if (isValid) education.add(form.education);
+    });
+    if (isValid) {
+      await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"education":education});
+      setState(() { storage.getItem("user_data")["education"] = education; });
+      Navigator.pop(context);
+    }
   }
 }
