@@ -190,6 +190,16 @@ class _RegisterTwoState extends State<RegisterTwo> {
             onPressed: validate,
           ),
         ),
+        SizedBox(
+          height: 5.0,
+        ),
+        FlatButton(
+          onPressed: () { Navigator.pop(context); },
+          child: Text(
+            "BACK",
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
       ],
     ),
   );
@@ -252,7 +262,7 @@ class _RegisterTwoState extends State<RegisterTwo> {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(
             content: Text("Oops, username already exists. Please try again."),
-            duration: Duration(seconds: 2), backgroundColor: Colors.black,
+            duration: Duration(seconds: 2), backgroundColor: Colors.red,
           )
         );
       }

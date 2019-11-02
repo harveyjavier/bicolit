@@ -260,7 +260,7 @@ class _LoginState extends State<Login> {
           SnackBar(
             content: Text("Email / phone number and password did not match. Please try again."),
             duration: Duration(seconds: 2),
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.red,
           )
         );
         setState(() {

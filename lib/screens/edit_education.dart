@@ -3,11 +3,13 @@ import 'package:bicolit/utils/uidata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:async';
 
 import 'package:bicolit/tools/text_field_icon_button.dart';
 import 'package:bicolit/tools/education_form.dart';
 import 'package:bicolit/model/education.dart';
+import 'package:bicolit/screens/profile.dart';
 
 class EditEducation extends StatefulWidget {
   @override
@@ -18,6 +20,7 @@ class _EditEducationState extends State<EditEducation> {
   final db = Firestore.instance;
   final storage = LocalStorage("data");
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  ScrollController _scrollController = ScrollController();
 
   List<Education> _education = [];
   List<EducationForm> _forms = [];
@@ -30,10 +33,21 @@ class _EditEducationState extends State<EditEducation> {
   }
 
   void onMount() {
-    storage.clear();
+    List education = storage.getItem("user_data")["education"];
+    if (education.length != 0){
+      for (int i=0; i<education.length; i++) {
+        setState(() {
+          _education.add(Education(
+            school: education[i]["school"],
+            degree: education[i]["degree"],
+            field: education[i]["field"],
+            start_year: education[i]["start_year"],
+            end_year: education[i]["end_year"] == null ? "" : education[i]["end_year"],
+          ));
+        });  
+      }
+    }
   }
-
-  Future<bool> _onBack() {}
 
   void addField() {
     if (_canAdd) {
@@ -41,7 +55,18 @@ class _EditEducationState extends State<EditEducation> {
         _canAdd = false;
         _education.add(Education());
       });
+      Future.delayed(Duration(milliseconds: 500)).then((onvalue) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
       Future.delayed(Duration(seconds: 2)).then((onvalue) { setState(() { _canAdd = true; }); });
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("You can add again after a second."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.orange,
+        )
+      );
     }
   }
 
@@ -59,47 +84,77 @@ class _EditEducationState extends State<EditEducation> {
         delete: () => deleteFields(i),
       ));
     }
-    return WillPopScope(
-      onWillPop: _onBack,
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text("Background"),
-          backgroundColor: Colors.black,
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Save", style: TextStyle(color: Colors.white),),
-              onPressed: next,
-            ),
-            // IconButton(
-            //   icon: Icon(Icons.arrow_forward),
-            //   onPressed: next,
-            // ),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        body: _education.length == 0 ? Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Center(
-            child: Text(
-              "Add your educational background by tapping the add button below.",
-              style: TextStyle(color: Colors.black),
-            ),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text("Educational Background"),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Save", style: TextStyle(color: Colors.white),),
+            onPressed: save,
           ),
-        ) : ListView.builder(
-          itemCount: _education.length,
-          itemBuilder: (_, i) => _forms[i],
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: _education.length == 0 ? Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Center(
+          child: Text(
+            "Add your educational background by tapping the add button below.",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: addField,
-          child: Icon(Icons.add),
-          backgroundColor: Colors.black,
-        ),
+      ) : ListView.builder(
+        controller: _scrollController,
+        itemCount: _education.length,
+        itemBuilder: (_, i) => _forms[i],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: addField,
+        child: Icon(Icons.add),
+        backgroundColor: Colors.black,
       ),
     );
   }
 
-  void next() async {
-    _forms.forEach((form) => print(form.isValid()));
+  void save() async {
+    bool isValid = true;
+    List education = [];
+
+    Alert(
+      context: context,
+      title: "Saving...",
+      buttons: [
+        DialogButton(
+          onPressed: () {}, color: Colors.black,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            height: 17.0, width: 17.0,
+          )
+        )
+      ]
+    ).show();
+
+    _forms.forEach((form) {
+      isValid = form.isValid();
+      print(form.data());
+      if (isValid) education.add(form.data());
+    });
+    if (isValid) {
+      await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"education":education});
+      setState(() { storage.getItem("user_data")["education"] = education; });
+      Navigator.pop(context);
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Educational background updated successfully."),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        )
+      );
+    }
   }
 }
