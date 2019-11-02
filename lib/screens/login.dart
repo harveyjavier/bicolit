@@ -48,15 +48,15 @@ class _LoginState extends State<Login> {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Confirm Exit", style: TextStyle(color: Colors.white),),
-        content: Text("Are sure you want to exit app?", style: TextStyle(color: Colors.white),),
+        title: Text("Confirm Exit", style: TextStyle(color: Colors.black)),
+        content: Text("Are sure you want to exit app?", style: TextStyle(color: Colors.black)),
         actions: <Widget>[
           FlatButton(
-            child: Text("No", style: TextStyle(color: Colors.white),),
+            child: Text("No", style: TextStyle(color: Colors.black)),
             onPressed: () => Navigator.pop(context, false),
           ),
           FlatButton(
-            child: Text("Yes", style: TextStyle(color: Colors.white),),
+            child: Text("Yes", style: TextStyle(color: Colors.black)),
             onPressed: () => exit(0),
           ),
         ],
@@ -223,8 +223,7 @@ class _LoginState extends State<Login> {
           strokeWidth: 2.0,
           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
         ),
-        height: 17.0,
-        width: 17.0,
+        height: 17.0, width: 17.0,
       );
     } else {
       return Text(

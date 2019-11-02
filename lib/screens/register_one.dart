@@ -5,6 +5,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:email_validator/email_validator.dart';
 
 import 'package:bicolit/tools/text_field_icon_button.dart';
+import 'package:bicolit/screens/login.dart';
 
 class RegisterOne extends StatefulWidget {
   @override
@@ -43,16 +44,16 @@ class _RegisterOneState extends State<RegisterOne> {
       return showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Confirm Back", style: TextStyle(color: Colors.white),),
-          content: Text("You have unsaved changes. Are you sure you want to discard and go back?", style: TextStyle(color: Colors.white),),
+          title: Text("Confirm Back", style: TextStyle(color: Colors.black)),
+          content: Text("You have unsaved changes. Are you sure you want to discard and go back?", style: TextStyle(color: Colors.black)),
           actions: <Widget>[
             FlatButton(
-              child: Text("No", style: TextStyle(color: Colors.white),),
+              child: Text("No", style: TextStyle(color: Colors.black)),
               onPressed: () => Navigator.pop(context, false),
             ),
             FlatButton(
-              child: Text("Yes", style: TextStyle(color: Colors.white),),
-              onPressed: () => Navigator.pushNamed(context, UIData.loginRoute),
+              child: Text("Yes", style: TextStyle(color: Colors.black)),
+              onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Login())),
             ),
           ],
         ),

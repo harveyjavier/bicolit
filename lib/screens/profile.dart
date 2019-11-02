@@ -40,11 +40,11 @@ class _ProfileState extends State<Profile> {
       return showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Please wait", style: TextStyle(color: Colors.white),),
-          content: Text("Upload still in progress..", style: TextStyle(color: Colors.white),),
+          title: Text("Please wait", style: TextStyle(color: Colors.black)),
+          content: Text("Upload still in progress..", style: TextStyle(color: Colors.black)),
           actions: <Widget>[
             FlatButton(
-              child: Text("OKAY", style: TextStyle(color: Colors.white),),
+              child: Text("OKAY", style: TextStyle(color: Colors.black)),
               onPressed: () => Navigator.pop(context, false),
             ),
           ],
