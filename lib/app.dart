@@ -22,7 +22,7 @@ class App extends StatelessWidget {
         cursorColor: Colors.black,
         textSelectionColor: Colors.black.withOpacity(0.2),
         textSelectionHandleColor: Colors.black,
-        dialogBackgroundColor: Colors.black,
+        dialogBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false,
       showPerformanceOverlay: false,

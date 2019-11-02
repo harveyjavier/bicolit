@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:date_format/date_format.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:io';
 
 import 'package:bicolit/utils/uidata.dart';
@@ -23,6 +25,8 @@ class _NewsFeedState extends State<NewsFeed> {
   bool _loading = true;
   RefreshController _refreshController = RefreshController();
   List _users = [], _posts = [];
+  String _post_input;
+  File _post_image;
 
   List<Widget> buildList() {
     return List.generate(_posts.length, (i) =>
@@ -65,8 +69,9 @@ class _NewsFeedState extends State<NewsFeed> {
                 child: Text(_posts[i]["post"]),
               ),
               SizedBox(height: 10.0),
-              _posts[i]["images"].length == 0 ? Image.network(_posts[i]["images"][0], fit: BoxFit.cover) : Container(),
-              _posts[i]["images"].length == 0 ? Container() : Divider(color: Colors.grey.shade300, height: 8.0),
+              //_posts[i]["images"].length == 0 ? Image.network(_posts[i]["images"][0], fit: BoxFit.cover) : Container(),
+              //_posts[i]["images"].length == 0 ? Container() : Divider(color: Colors.grey.shade300, height: 8.0),
+              Container(),
               FittedBox(
                 fit: BoxFit.contain,
                 child: ButtonBar(
@@ -115,6 +120,7 @@ class _NewsFeedState extends State<NewsFeed> {
           { nfd.data["user"] = ud.data; }
       });
     });
+    newsfeed_docs.sort((a, b) => b["created_at"].toDate().compareTo(a["created_at"].toDate()));
     setState(() {
       _users = users_docs;
       _posts = newsfeed_docs;
@@ -130,21 +136,89 @@ class _NewsFeedState extends State<NewsFeed> {
       return showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Confirm Exit", style: TextStyle(color: Colors.white),),
-          content: Text("Are sure you want to exit app?", style: TextStyle(color: Colors.white),),
+          title: Text("Confirm Exit", style: TextStyle(color: Colors.black),),
+          content: Text("Are sure you want to exit app?", style: TextStyle(color: Colors.black),),
           actions: <Widget>[
             FlatButton(
-              child: Text("No", style: TextStyle(color: Colors.white),),
+              child: Text("No", style: TextStyle(color: Colors.black),),
               onPressed: () => Navigator.pop(context, false),
             ),
             FlatButton(
-              child: Text("Yes", style: TextStyle(color: Colors.white),),
+              child: Text("Yes", style: TextStyle(color: Colors.black),),
               onPressed: () => exit(0),
             ),
           ],
         ),
       );
     }
+  }
+
+  void onSubmitPost() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      Navigator.pop(context);
+      Alert(
+        context: context,
+        title: "Posting...",
+        buttons: [
+          DialogButton(
+            onPressed: () {}, color: Colors.black,
+            child: SizedBox(
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+              height: 17.0, width: 17.0,
+            )
+          )
+        ]
+      ).show();
+
+      DocumentReference ref = await db.collection("newsfeed").add({
+        "comments": [],
+        "creator": storage.getItem("user_data")["id"],
+        "images": [],
+        "likes": [],
+        "post": _post_input,
+        "created_at": FieldValue.serverTimestamp(),
+        "updated_at": null,
+      });
+      fetchData();
+      Navigator.pop(context);
+    }
+  }
+
+  void onTogglePostForm() {
+    Alert(
+      context: context,
+      title: "Post to news feed",
+      content: Form(
+        key: _formKey,
+        child: Column(
+        children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: TextFormField(
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(hintText: "What's up, " + storage.getItem("user_data")["firstname"] + "?"),
+                validator: (value) {
+                  if (value.isEmpty)
+                    { return "Say something..."; }
+                },
+                onSaved: (value) => _post_input = value,
+              ),
+            ),
+          ],  
+        ),
+      ),
+      buttons: [
+        DialogButton(
+          onPressed: onSubmitPost, color: Colors.black,
+          child: Text("SUBMIT", style: TextStyle(color: Colors.white)),
+        )
+      ]
+    ).show();
   }
 
   loadScreen() => Column(
@@ -199,7 +273,7 @@ class _NewsFeedState extends State<NewsFeed> {
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {},
+              onPressed: onTogglePostForm,
               child: Icon(Icons.edit),
               backgroundColor: Colors.black,
             ),
