@@ -8,7 +8,6 @@ import 'dart:io';
 
 import 'package:bicolit/utils/uidata.dart';
 import 'package:bicolit/tools/common_scaffold.dart';
-import 'package:bicolit/tools/label_icon.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -188,6 +187,112 @@ class _ProfileState extends State<Profile> {
     ),
   );
 
+  Widget educationList(){
+    List education = storage.getItem("user_data")["education"];
+    List<Widget> list = new List<Widget>();
+    list.add(SizedBox(height: 15.0));
+
+    for(int i=0; i<education.length; i++){
+      list.add(
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                education[i]["school"],
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.0),
+              ),
+            ],
+          ),
+        ),
+      );
+      list.add(
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                education[i]["degree"],
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.0),
+              ),
+            ],
+          ),
+        ),
+      );
+      list.add(
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                education[i]["start_year"] + " - " + (education[i]["end_year"] == null ? "present" : education[i]["end_year"]),
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.0),
+              ),
+            ],
+          ),
+        ),
+      );
+      list.add(SizedBox(height: 17.0));
+    }
+    return Column(children: list);
+  }
+
+  Widget experienceList(){
+    List experience = storage.getItem("user_data")["experience"];
+    List<Widget> list = new List<Widget>();
+    list.add(SizedBox(height: 15.0));
+
+    for(int i=0; i<experience.length; i++){
+      list.add(
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                experience[i]["company"],
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.0),
+              ),
+            ],
+          ),
+        ),
+      );
+      list.add(
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                experience[i]["title"],
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.0),
+              ),
+            ],
+          ),
+        ),
+      );
+      list.add(
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                experience[i]["start_year"] + " - " + (experience[i]["end_year"] == null ? "present" : experience[i]["end_year"]),
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.0),
+              ),
+            ],
+          ),
+        ),
+      );
+      list.add(SizedBox(height: 17.0));
+    }
+    return Column(children: list);
+  }
+
   Widget educationCard() => Container(
     child: Card(
       elevation: 2.0,
@@ -210,7 +315,7 @@ class _ProfileState extends State<Profile> {
             padding: const EdgeInsets.all(8.0),
             child: storage.getItem("user_data")["education"].length == 0
               ? Center(child: Text("No data available."))
-              : Container(),
+              : educationList(),
           ),
           Divider(color: Colors.grey.shade300, height: 8.0),
           Row(
@@ -219,8 +324,16 @@ class _ProfileState extends State<Profile> {
               Container(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: LabelIcon(
-                  icon: Icons.mode_edit, iconColor: Colors.black, label: "EDIT",
+                child: FlatButton(
+                  color: Colors.black,
+                  textColor: Colors.white,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.mode_edit, color: Colors.white),
+                      SizedBox(width: 5.0),
+                      Text("EDIT", style: TextStyle(fontWeight: FontWeight.w700))
+                    ],
+                  ),
                   onPressed: () { Navigator.pushNamed(context, UIData.editEducationRoute); },
                 ),
               ),
@@ -253,7 +366,7 @@ class _ProfileState extends State<Profile> {
             padding: const EdgeInsets.all(8.0),
             child: storage.getItem("user_data")["experience"].length == 0
               ? Center(child: Text("No data available."))
-              : Container(),
+              : experienceList(),
           ),
           Divider(color: Colors.grey.shade300, height: 8.0),
           Row(
@@ -262,8 +375,16 @@ class _ProfileState extends State<Profile> {
               Container(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: LabelIcon(
-                  icon: Icons.mode_edit, iconColor: Colors.black, label: "EDIT",
+                child: FlatButton(
+                  color: Colors.black,
+                  textColor: Colors.white,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.mode_edit, color: Colors.white),
+                      SizedBox(width: 5.0),
+                      Text("EDIT", style: TextStyle(fontWeight: FontWeight.w700))
+                    ],
+                  ),
                   onPressed: () { Navigator.pushNamed(context, UIData.editExperienceRoute); },
                 ),
               ),

@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:bicolit/tools/text_field_icon_button.dart';
 import 'package:bicolit/tools/experience_form.dart';
 import 'package:bicolit/model/experience.dart';
+import 'package:bicolit/screens/profile.dart';
 
 class EditExperience extends StatefulWidget {
   @override
@@ -30,7 +31,11 @@ class _EditExperienceState extends State<EditExperience> {
   }
 
   void onMount() {
-    storage.clear();
+
+  }
+
+  Future<bool> _onBack() {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Profile()));
   }
 
   void addField() {
@@ -60,7 +65,8 @@ class _EditExperienceState extends State<EditExperience> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Background"),
+        title: Text("Experience Background"),
+        centerTitle: true,
         backgroundColor: Colors.black,
         actions: <Widget>[
           FlatButton(

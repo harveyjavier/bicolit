@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:bicolit/tools/text_field_icon_button.dart';
 import 'package:bicolit/tools/education_form.dart';
 import 'package:bicolit/model/education.dart';
+import 'package:bicolit/screens/profile.dart';
 
 class EditEducation extends StatefulWidget {
   @override
@@ -30,10 +31,8 @@ class _EditEducationState extends State<EditEducation> {
   }
 
   void onMount() {
-    storage.clear();
-  }
 
-  Future<bool> _onBack() {}
+  }
 
   void addField() {
     if (_canAdd) {
@@ -59,42 +58,36 @@ class _EditEducationState extends State<EditEducation> {
         delete: () => deleteFields(i),
       ));
     }
-    return WillPopScope(
-      onWillPop: _onBack,
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text("Background"),
-          backgroundColor: Colors.black,
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Save", style: TextStyle(color: Colors.white),),
-              onPressed: next,
-            ),
-            // IconButton(
-            //   icon: Icon(Icons.arrow_forward),
-            //   onPressed: next,
-            // ),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        body: _education.length == 0 ? Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Center(
-            child: Text(
-              "Add your educational background by tapping the add button below.",
-              style: TextStyle(color: Colors.black),
-            ),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text("Educational Background"),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Save", style: TextStyle(color: Colors.white),),
+            onPressed: next,
           ),
-        ) : ListView.builder(
-          itemCount: _education.length,
-          itemBuilder: (_, i) => _forms[i],
+        ],
+      ),
+      backgroundColor: Colors.white,
+      body: _education.length == 0 ? Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Center(
+          child: Text(
+            "Add your educational background by tapping the add button below.",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: addField,
-          child: Icon(Icons.add),
-          backgroundColor: Colors.black,
-        ),
+      ) : ListView.builder(
+        itemCount: _education.length,
+        itemBuilder: (_, i) => _forms[i],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: addField,
+        child: Icon(Icons.add),
+        backgroundColor: Colors.black,
       ),
     );
   }
