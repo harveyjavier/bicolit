@@ -190,6 +190,16 @@ class _RegisterTwoState extends State<RegisterTwo> {
             onPressed: validate,
           ),
         ),
+        SizedBox(
+          height: 5.0,
+        ),
+        FlatButton(
+          onPressed: () { Navigator.pop(context); },
+          child: Text(
+            "BACK",
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
       ],
     ),
   );

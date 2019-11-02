@@ -20,13 +20,15 @@ class _NewsFeedState extends State<NewsFeed> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   final db = Firestore.instance;
   final storage = LocalStorage("data");
-  final _formKey = GlobalKey<FormState>();
+  final _postFormKey = GlobalKey<FormState>();
+  final _editFormKey = GlobalKey<FormState>();
 
   bool _loading = true;
   RefreshController _refreshController = RefreshController();
   List _users = [], _posts = [];
-  String _post_input;
+  String _post_input, _edit_post_input;
   File _post_image;
+  String dropdownValue = 'One';
 
   List<Widget> buildList() {
     return List.generate(_posts.length, (i) =>
@@ -39,10 +41,15 @@ class _NewsFeedState extends State<NewsFeed> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, //MainAxisAlignment.start
                   children: <Widget>[
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        if (_posts[i]["creator"] == storage.getItem("user_data")["id"])
+                          { Navigator.pushNamed(context, UIData.profileRoute); }
+                        // else
+                        //   {}
+                      },
                       child: CircleAvatar(backgroundImage: _posts[i]["user"]["profile_image"] == null
                         ? AssetImage(UIData.defaultProfileImage)
                         : NetworkImage(_posts[i]["user"]["profile_image"])),
@@ -61,9 +68,79 @@ class _NewsFeedState extends State<NewsFeed> {
                         ),
                       ),
                     ),
+                    _posts[i]["creator"] == storage.getItem("user_data")["id"]
+                    ? DropdownButton<String>(
+                        icon: Icon(Icons.more_vert),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.black),
+                        underline: Container(height: 2, color: Colors.white),
+                        onChanged: (String newValue) {
+                          Alert(
+                            context: context,
+                            title: newValue == "EDIT" ? "Edit post" : "Delete post",
+                            content: newValue == "EDIT"
+                            ? Form(
+                                key: _editFormKey,
+                                child: Column(
+                                children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: TextFormField(
+                                        maxLines: null,
+                                        initialValue:_posts[i]["post"],
+                                        keyboardType: TextInputType.multiline,
+                                        decoration: InputDecoration(hintText: "What's up, " + storage.getItem("user_data")["firstname"] + "?"),
+                                        validator: (value) {
+                                          if (value.isEmpty)
+                                            { return "Say something..."; }
+                                        },
+                                        onSaved: (value) => _edit_post_input = value,
+                                      ),
+                                    ),
+                                  ],  
+                                ),
+                              )
+                            : Container(),
+                            desc: newValue == "EDIT" ? "" : "Are you sure you want to delete this post?",
+                            buttons: [
+                              DialogButton(
+                                color: Colors.black,
+                                child: Text(newValue == "EDIT" ? "EDIT" : "YES", style: TextStyle(color: Colors.white)),
+                                onPressed: newValue == "EDIT"
+                                ? () async {
+                                    if (_editFormKey.currentState.validate()) {
+                                      _editFormKey.currentState.save();
+                                      if (_edit_post_input == _posts[i]["post"]) {
+                                        Navigator.pop(context);
+                                      } else {
+                                        await db.collection("newsfeed").document(_posts[i]["id"]).updateData({"post":_edit_post_input, "updated_at":FieldValue.serverTimestamp()});
+                                        fetchData();
+                                        Navigator.pop(context);
+                                      }
+                                    }
+                                  }
+                                : () async {
+                                    await db.collection("newsfeed").document(_posts[i]["id"]).delete();
+                                    fetchData();
+                                    Navigator.pop(context);
+                                  }
+                              )
+                            ]
+                          ).show();
+                        },
+                        items: <String>["EDIT", "DELETE"].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      )
+                    : Container(),
                   ],
                 ),
               ),
+              Divider(color: Colors.grey.shade300, height: 8.0),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(_posts[i]["post"]),
@@ -71,7 +148,7 @@ class _NewsFeedState extends State<NewsFeed> {
               SizedBox(height: 10.0),
               //_posts[i]["images"].length == 0 ? Image.network(_posts[i]["images"][0], fit: BoxFit.cover) : Container(),
               //_posts[i]["images"].length == 0 ? Container() : Divider(color: Colors.grey.shade300, height: 8.0),
-              Container(),
+              Divider(color: Colors.grey.shade300, height: 8.0),
               FittedBox(
                 fit: BoxFit.contain,
                 child: ButtonBar(
@@ -115,6 +192,7 @@ class _NewsFeedState extends State<NewsFeed> {
     final List<DocumentSnapshot> users_docs = users_result.documents;
     final List<DocumentSnapshot> newsfeed_docs = newsfeed_result.documents;
     newsfeed_docs.forEach((nfd) {
+      nfd.data["id"] = nfd.documentID;
       users_docs.forEach((ud) {
         if (nfd.data["creator"] == ud.documentID)
           { nfd.data["user"] = ud.data; }
@@ -154,8 +232,8 @@ class _NewsFeedState extends State<NewsFeed> {
   }
 
   void onSubmitPost() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_postFormKey.currentState.validate()) {
+      _postFormKey.currentState.save();
 
       Navigator.pop(context);
       Alert(
@@ -193,7 +271,7 @@ class _NewsFeedState extends State<NewsFeed> {
       context: context,
       title: "Post to news feed",
       content: Form(
-        key: _formKey,
+        key: _postFormKey,
         child: Column(
         children: <Widget>[
             Padding(

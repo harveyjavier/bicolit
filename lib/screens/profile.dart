@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:bicolit/utils/uidata.dart';
 import 'package:bicolit/tools/common_scaffold.dart';
+import 'package:bicolit/tools/label_icon.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -187,96 +188,88 @@ class _ProfileState extends State<Profile> {
     ),
   );
 
-  Widget imagesCard() => Container(
-    height: deviceSize.height / 6,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
+  Widget educationCard() => Container(
+    child: Card(
+      elevation: 2.0,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Education",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+                ),
+              ),
+            ],
+          ),
+          Divider(color: Colors.grey.shade300, height: 8.0),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Photos",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-            ),
+            child: storage.getItem("user_data")["education"].length == 0
+              ? Center(child: Text("No data available."))
+              : Container(),
           ),
-          Expanded(
-            child: Card(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context, i) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.network(
-                          "https://cdn.pixabay.com/photo/2016/10/31/18/14/ice-1786311_960_720.jpg"),
-                    ),
+          Divider(color: Colors.grey.shade300, height: 8.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: LabelIcon(
+                  icon: Icons.mode_edit, iconColor: Colors.black, label: "EDIT",
+                  onPressed: () { Navigator.pushNamed(context, UIData.editEducationRoute); },
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ]
       ),
     ),
   );
 
-  Widget profileColumn() => Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        CircleAvatar(
-          backgroundImage: NetworkImage(
-              "https://avatars0.githubusercontent.com/u/12619420?s=460&v=4"),
-        ),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget experienceCard() => Container(
+    child: Card(
+      elevation: 2.0,
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Text(
-                "Harvey Javier posted a photo",
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Experience",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
+                ),
               ),
-              SizedBox(
-                height: 5.0,
-              ),
-              Text(
-                "25 mins ago",
-              )
             ],
           ),
-        ))
-      ],
-    ),
-  );
-
-  Widget postCard() => Container(
-    width: double.infinity,
-    height: deviceSize.height / 3,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
+          Divider(color: Colors.grey.shade300, height: 8.0),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Post",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.0),
-            ),
+            child: storage.getItem("user_data")["experience"].length == 0
+              ? Center(child: Text("No data available."))
+              : Container(),
           ),
-          profileColumn(),
-          Expanded(
-            child: Card(
-              elevation: 2.0,
-              child: Image.network(
-                "https://cdn.pixabay.com/photo/2018/06/12/01/04/road-3469810_960_720.jpg",
-                fit: BoxFit.cover,
+          Divider(color: Colors.grey.shade300, height: 8.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: LabelIcon(
+                  icon: Icons.mode_edit, iconColor: Colors.black, label: "EDIT",
+                  onPressed: () { Navigator.pushNamed(context, UIData.editExperienceRoute); },
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ]
       ),
     ),
   );
@@ -285,9 +278,10 @@ class _ProfileState extends State<Profile> {
     child: Column(
       children: <Widget>[
         profileHeader(),
-        // followColumn(deviceSize),
-        // imagesCard(),
-        // postCard(),
+        SizedBox(height: 5.0),
+        educationCard(),
+        SizedBox(height: 5.0),
+        experienceCard(),
       ],
     ),
   );
