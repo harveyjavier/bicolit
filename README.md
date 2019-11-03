@@ -14,7 +14,7 @@ Not yet available...
 
 Running the project straight away will get you an error regarding a `key.properties` file that is missing. To fix it,
 
-1.  Open android/app/build.gradle file and comment the following lines-
+1.  Open `android/app/build.gradle` file and comment the following lines-
 
 ```
 //keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -34,7 +34,7 @@ buildTypes {
 }
 ```
 
-2. Open android/local.properties file and add the following lines-
+2. Open `android` folder, look for `local.properties` file (create if it does not exist), and add the following lines-
 
 ```
 flutter.buildMode=debug
@@ -42,7 +42,7 @@ flutter.versionName=1.0.0
 flutter.versionCode=1
 ```
 
-3.  Open the project on your cmd or terminal, type flutter run, then you're good to go!
+3.  And you're good to go. Open the project on your cmd or terminal, and type-
 
 ```
 flutter run
