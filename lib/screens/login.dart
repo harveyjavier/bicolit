@@ -30,8 +30,6 @@ class _LoginState extends State<Login> {
   }
 
   void onMount() {
-    if (storage.getItem("register_data") != null)
-      { storage.clear(); }
     if (storage.getItem("registered") != null) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -254,7 +252,7 @@ class _LoginState extends State<Login> {
 
       if (_account_matched) {
         storage.setItem("user_data", _user_data);
-        Navigator.pushNamed(context, UIData.newsFeedRoute);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => NewsFeed()));
       } else {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(

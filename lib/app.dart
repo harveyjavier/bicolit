@@ -9,6 +9,7 @@ import 'package:bicolit/screens/register_one.dart';
 import 'package:bicolit/screens/register_two.dart';
 import 'package:bicolit/screens/news_feed.dart';
 import 'package:bicolit/screens/profile.dart';
+import 'package:bicolit/screens/about.dart';
 import 'package:bicolit/screens/edit_education.dart';
 import 'package:bicolit/screens/edit_experience.dart';
 import 'package:bicolit/screens/notfound_page.dart';
@@ -45,6 +46,7 @@ class App extends StatelessWidget {
         UIData.registerTwoRoute: (BuildContext context) => RegisterTwo(),
         UIData.newsFeedRoute: (BuildContext context) => NewsFeed(),
         UIData.profileRoute: (BuildContext context) => Profile(),
+        UIData.aboutRoute: (BuildContext context) => About(),
         UIData.editEducationRoute: (BuildContext context) => EditEducation(),
         UIData.editExperienceRoute: (BuildContext context) => EditExperience(),
       },
