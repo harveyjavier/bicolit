@@ -103,39 +103,37 @@ class _ProfileState extends State<Profile> {
   }
 
   Future getImage() async {
-    if (!_uploading) {
-      var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-      setState(() { _image = tempImage; });
+    var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() { _image = tempImage; });
 
-      return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => WillPopScope(
-          onWillPop: () async => false,
-          child: AlertDialog(
-            title: Text("Confirm Upload", style: TextStyle(color: Colors.black),),
-            content: Image.file(tempImage),
-            // CircleAvatar(
-            //   radius: 40.0,
-            //   backgroundImage: FileImage(_image), //
-            // ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Yes", style: TextStyle(color: Colors.black),),
-                onPressed: upload
-              ),
-              FlatButton(
-                child: Text("Cancel", style: TextStyle(color: Colors.black),),
-                onPressed: () {
-                  Navigator.pop(context, false);
-                  setState(() { _image = null; });
-                },
-              ),
-            ],
-          ),
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => WillPopScope(
+        onWillPop: () async => false,
+        child: AlertDialog(
+          title: Text("Confirm Upload", style: TextStyle(color: Colors.black),),
+          content: Image.file(tempImage),
+          // CircleAvatar(
+          //   radius: 40.0,
+          //   backgroundImage: FileImage(_image), //
+          // ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Yes", style: TextStyle(color: Colors.black),),
+              onPressed: upload
+            ),
+            FlatButton(
+              child: Text("Cancel", style: TextStyle(color: Colors.black),),
+              onPressed: () {
+                Navigator.pop(context, false);
+                setState(() { _image = null; });
+              },
+            ),
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   Widget profileHeader() => Container(
@@ -157,7 +155,7 @@ class _ProfileState extends State<Profile> {
                     border: Border.all(width: 2.0, color: Colors.white)),
                 child: _uploading
                   ? InkWell(
-                      onTap: getImage,
+                      onTap: () {},
                       child: CircleAvatar(
                         radius: 40.0,
                         backgroundImage: storage.getItem("user_data")["profile_image"] == null
@@ -173,7 +171,9 @@ class _ProfileState extends State<Profile> {
                       onTap: getImage,
                       child: CircleAvatar(
                         radius: 40.0,
-                        backgroundImage: NetworkImage(storage.getItem("user_data")["profile_image"] == null ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" : storage.getItem("user_data")["profile_image"]),
+                        backgroundImage: storage.getItem("user_data")["profile_image"] == null
+                        ? AssetImage(UIData.defaultProfileImage)
+                        : NetworkImage(storage.getItem("user_data")["profile_image"]),
                       ),
                     )
               ),
