@@ -73,8 +73,7 @@ class _AppDrawerState extends State<AppDrawer> {
               Icons.info,
               color: Colors.black,
             ),
-            onTap: () {},
-            //onTap: () { widget.current_screen == "about" ? Navigator.pop(context) : Navigator.pushNamed(context, UIData.aboutRoute); },
+            onTap: () { widget.current_screen == "about" ? Navigator.pop(context) : Navigator.pushNamed(context, UIData.aboutRoute); },
           ),
           Divider( color: Colors.grey.shade300, height: 8.0, ),
           ListTile(

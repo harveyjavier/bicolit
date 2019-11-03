@@ -10,6 +10,7 @@ class UIData {
   static const String registerTwoRoute = "/registerTwo";
   static const String newsFeedRoute = "/newsFeed";
   static const String profileRoute = "/profile";
+  static const String aboutRoute = "/about";
   static const String editEducationRoute = "/editEducation";
   static const String editExperienceRoute = "/editExperience";
   static const String notFoundRoute = "/notFound";
@@ -28,6 +29,7 @@ class UIData {
   static const String imageDir = "assets/images";
   static const String bitLogoImage = "$imageDir/bit-logo.png";
   static const String bitLogoTransparentImage = "$imageDir/bit-logo-transparent.png";
+  static const String bitCoverImage = "$imageDir/bit-cover-image.jpg";
   static const String defaultProfileImage = "$imageDir/default-profile-image.png";
 
   //gneric

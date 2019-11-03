@@ -29,14 +29,6 @@ class _RegisterOneState extends State<RegisterOne> {
     _password_c = new TextEditingController();
     _confirm_password_c = new TextEditingController();
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => onMount());
-  }
-
-  void onMount() {
-    _email_c.text = storage.getItem("register_data")["email"] != null ? storage.getItem("register_data")["email"] : "";
-    _mobile_number_c.text = storage.getItem("register_data")["mobile_number"] != null ? storage.getItem("register_data")["mobile_number"] : "";
-    _password_c.text = storage.getItem("register_data")["password"] != null ? storage.getItem("register_data")["password"] : "";
-    _confirm_password_c.text = storage.getItem("register_data")["password"] != null ? storage.getItem("register_data")["password"] : "";
   }
 
   Future<bool> _onBack() {

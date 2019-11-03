@@ -30,14 +30,6 @@ class _RegisterTwoState extends State<RegisterTwo> {
     _lastname_c = new TextEditingController();
     _birthday_c = new TextEditingController();
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => onMount());
-  }
-
-  void onMount() {
-    _username_c.text = storage.getItem("register_data")["username"] != null ? storage.getItem("register_data")["username"] : "";
-    _firstname_c.text = storage.getItem("register_data")["firstname"] != null ? storage.getItem("register_data")["firstname"] : "";
-    _lastname_c.text = storage.getItem("register_data")["lastname"] != null ? storage.getItem("register_data")["lastname"] : "";
-    _birthday_c.text = storage.getItem("register_data")["birthday"] != null ? storage.getItem("register_data")["birthday"] : "";
   }
 
   @override
@@ -141,34 +133,31 @@ class _RegisterTwoState extends State<RegisterTwo> {
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
           child: TextFormField(
             controller: _birthday_c,
+            onTap: () {
+              DatePicker.showDatePicker(context,
+                locale: LocaleType.en,
+                currentTime: DateTime.now(),
+                maxTime: DateTime.now(),
+                showTitleActions: true,
+                theme: DatePickerTheme(
+                  backgroundColor: Colors.black,
+                  itemStyle: TextStyle( color: Colors.white, fontWeight: FontWeight.bold),
+                  doneStyle: TextStyle(color: Colors.white, fontSize: 16),
+                  cancelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                onConfirm: (date) {
+                  setState(() {
+                    _birthday = formatDate(date, [yyyy, "-", mm, "-", dd]);
+                    _birthday_c.text = formatDate(date, [yyyy, "-", mm, "-", dd]);
+                  });
+                },
+              );
+            },
             maxLines: 1,
             readOnly: true,
             decoration: InputDecoration(
               hintText: "Enter your birthday",
               labelText: "Birthday",
-              suffixIcon: TextFieldIconButton(
-                icon: Icons.calendar_today,
-                onPressed: () {
-                  DatePicker.showDatePicker(context,
-                    locale: LocaleType.en,
-                    currentTime: DateTime.now(),
-                    maxTime: DateTime.now(),
-                    showTitleActions: true,
-                    theme: DatePickerTheme(
-                      backgroundColor: Colors.black,
-                      itemStyle: TextStyle( color: Colors.white, fontWeight: FontWeight.bold),
-                      doneStyle: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    onChanged: (date) { print(formatDate(date, [yyyy, "-", mm, "-", dd])); },
-                    onConfirm: (date) {
-                      setState(() {
-                        _birthday = formatDate(date, [yyyy, "-", mm, "-", dd]);
-                        _birthday_c.text = formatDate(date, [yyyy, "-", mm, "-", dd]);
-                      });
-                    },
-                  );
-                },
-              ),
             ),
             validator: (input) {
               if (input.isEmpty)
@@ -266,10 +255,6 @@ class _RegisterTwoState extends State<RegisterTwo> {
           )
         );
       }
-      setState(() {
-        _signing_up = false;
-        _username_matched = false;
-      });
     }
   }
 }
