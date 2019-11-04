@@ -44,8 +44,22 @@ class _EditEducationState extends State<EditEducation> {
             start_year: education[i]["start_year"],
             end_year: education[i]["end_year"] == null ? "" : education[i]["end_year"],
           ));
-        });  
+        });
+        updateForm();
       }
+    }
+  }
+
+  void updateForm() {
+    _forms.clear();
+    for (int i=0; i<_education.length; i++){
+      setState(() {
+        _forms.add(EducationForm(
+          key: GlobalKey(),
+          education: _education[i],
+          delete: () => deleteFields(i),
+        ));
+      });
     }
   }
 
@@ -55,6 +69,7 @@ class _EditEducationState extends State<EditEducation> {
         _canAdd = false;
         _education.add(Education());
       });
+      updateForm();
       Future.delayed(Duration(milliseconds: 500)).then((onvalue) {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
@@ -72,18 +87,11 @@ class _EditEducationState extends State<EditEducation> {
 
   void deleteFields(int index) {
     setState(() { _education.removeAt(index); });
+    updateForm();
   }
 
   @override
   Widget build(BuildContext context) {
-    _forms.clear();
-    for (int i=0; i<_education.length; i++){
-      _forms.add(EducationForm(
-        key: GlobalKey(),
-        education: _education[i],
-        delete: () => deleteFields(i),
-      ));
-    }
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -123,28 +131,29 @@ class _EditEducationState extends State<EditEducation> {
     bool isValid = true;
     List education = [];
 
-    Alert(
-      context: context,
-      title: "Saving...",
-      buttons: [
-        DialogButton(
-          onPressed: () {}, color: Colors.black,
-          child: SizedBox(
-            child: CircularProgressIndicator(
-              strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-            height: 17.0, width: 17.0,
-          )
-        )
-      ]
-    ).show();
-
     _forms.forEach((form) {
       isValid = form.isValid();
       print(form.data());
       if (isValid) education.add(form.data());
     });
+    
     if (isValid) {
+      Alert(
+        context: context,
+        title: "Saving...",
+        buttons: [
+          DialogButton(
+            onPressed: () {}, color: Colors.black,
+            child: SizedBox(
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+              height: 17.0, width: 17.0,
+            )
+          )
+        ]
+      ).show();
+
       await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"education":education});
       setState(() { storage.getItem("user_data")["education"] = education; });
       Navigator.pop(context);

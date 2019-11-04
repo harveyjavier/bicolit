@@ -44,7 +44,8 @@ class _EditExperienceState extends State<EditExperience> {
             start_year: experience[i]["start_year"],
             end_year: experience[i]["end_year"] == null ? "" : experience[i]["end_year"],
           ));
-        });  
+        });
+        updateForm();
       }
     }
   }
@@ -53,12 +54,26 @@ class _EditExperienceState extends State<EditExperience> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Profile()));
   }
 
+  void updateForm() {
+    _forms.clear();
+    for (int i=0; i<_experience.length; i++){
+      setState(() {
+        _forms.add(ExperienceForm(
+          key: GlobalKey(),
+          experience: _experience[i],
+          delete: () => deleteFields(i),
+        ));
+      });
+    }
+  }
+
   void addField() {
     if (_canAdd) {
       setState(() {
         _canAdd = false;
         _experience.add(Experience());
       });
+      updateForm();
       Future.delayed(Duration(milliseconds: 500)).then((onvalue) {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
@@ -76,18 +91,11 @@ class _EditExperienceState extends State<EditExperience> {
 
   void deleteFields(int index) {
     setState(() { _experience.removeAt(index); });
+    updateForm();
   }
 
   @override
   Widget build(BuildContext context) {
-    _forms.clear();
-    for (int i=0; i<_experience.length; i++){
-      _forms.add(ExperienceForm(
-        key: GlobalKey(),
-        experience: _experience[i],
-        delete: () => deleteFields(i),
-      ));
-    }
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -127,27 +135,28 @@ class _EditExperienceState extends State<EditExperience> {
     bool isValid = true;
     List experience = [];
 
-    Alert(
-      context: context,
-      title: "Saving...",
-      buttons: [
-        DialogButton(
-          onPressed: () {}, color: Colors.black,
-          child: SizedBox(
-            child: CircularProgressIndicator(
-              strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-            height: 17.0, width: 17.0,
-          )
-        )
-      ]
-    ).show();
-
     _forms.forEach((form) {
       isValid = form.isValid();
       if (isValid) experience.add(form.data());
     });
+
     if (isValid) {
+      Alert(
+        context: context,
+        title: "Saving...",
+        buttons: [
+          DialogButton(
+            onPressed: () {}, color: Colors.black,
+            child: SizedBox(
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+              height: 17.0, width: 17.0,
+            )
+          )
+        ]
+      ).show();
+      
       await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"experience":experience});
       setState(() { storage.getItem("user_data")["experience"] = experience; });
       Navigator.pop(context);
