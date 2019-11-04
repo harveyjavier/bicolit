@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
   
   String _email_or_number, _password;
   Map _user_data;
-  bool _obscureP = true, _signing_in = false, _account_matched = false;
+  bool _loading = true, _obscureP = true, _signing_in = false, _account_matched = false;
 
   @override
   initState() {
@@ -30,16 +30,23 @@ class _LoginState extends State<Login> {
   }
 
   void onMount() {
-    if (storage.getItem("registered") != null) {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text("You have successfully signed up! User ID: " + storage.getItem("registered")["user_id"]),
-          duration: Duration(seconds: 2),
-          backgroundColor: Colors.green,
-        )
-      );
-      storage.clear();
-    }
+    storage.ready.then((_) {
+      print(storage.getItem("user_data"));
+      if (storage.getItem("user_data") == null)
+        { setState(() { _loading = false; }); }
+      if (storage.getItem("user_data") != null)
+        { Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => NewsFeed())); }
+      if (storage.getItem("registered") != null) {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text("You have successfully signed up! User ID: " + storage.getItem("registered")["user_id"]),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
+          )
+        );
+        storage.clear();
+      }
+    });
   }
 
   Future<bool> _onBack() {
@@ -82,7 +89,7 @@ class _LoginState extends State<Login> {
   loginBody() => SingleChildScrollView(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[loginHeader(), loginFields()],
+      children: _loading ? <Widget>[loginLoader()] : <Widget>[loginHeader(), loginFields()],
     ),
   );
 
