@@ -159,6 +159,7 @@ class _EditExperienceState extends State<EditExperience> {
       
       await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"experience":experience});
       setState(() { storage.getItem("user_data")["experience"] = experience; });
+      storage.setItem("user_data", storage.getItem("user_data"));
       Navigator.pop(context);
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(

@@ -156,6 +156,7 @@ class _EditEducationState extends State<EditEducation> {
 
       await db.collection("users").document(storage.getItem("user_data")["id"]).updateData({"education":education});
       setState(() { storage.getItem("user_data")["education"] = education; });
+      storage.setItem("user_data", storage.getItem("user_data"));
       Navigator.pop(context);
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
