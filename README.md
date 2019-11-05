@@ -4,15 +4,9 @@ An entry for Flutter Hackathon 2019, Philippines.
 
 # Screenshots
 
-<img height="480px" src="raw/sc1.png">
-<img height="480px" src="raw/sc2.png">
-<img height="480px" src="raw/sc3.png">
-<img height="480px" src="raw/sc4.png">
-<img height="480px" src="raw/sc5.png">
-<img height="480px" src="raw/sc6.png">
-<img height="480px" src="raw/sc7.png">
-<img height="480px" src="raw/sc8.png">
-<img height="480px" src="raw/sc9.png">
+![alt-text-1](raw/sc1.png) ![alt-text-2](raw/sc2.png) ![alt-text-2](raw/sc3.png)
+![alt-text-1](raw/sc4.png) ![alt-text-2](raw/sc5.png) ![alt-text-2](raw/sc6.png)
+![alt-text-1](raw/sc7.png) ![alt-text-2](raw/sc8.png) ![alt-text-2](raw/sc9.png)
 
 ## Setup
 
