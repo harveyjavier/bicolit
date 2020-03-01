@@ -1,6 +1,6 @@
 # Bicol IT App
 
-An entry for Flutter Hackathon 2019, Philippines.
+An entry for Flutter Hackathon 2019, Philippines. UPDATE: Won [Top 9](http://bit.ly/flutterfinalists) out of 30+ entries and 85 participants.
 
 # Screenshots
 
