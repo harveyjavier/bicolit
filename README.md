@@ -1,6 +1,6 @@
 # Bicol IT App
 
-An entry for Flutter Hackathon 2019, Philippines. UPDATE: Won [Top 9](http://bit.ly/flutterfinalists) out of 30+ entries and 85 participants.
+An entry for Flutter Hackathon 2019, Philippines. UPDATE: Won [Top 9](https://harvz.link/0xb588w) out of 30+ entries and 85 participants.
 
 # Screenshots
 
@@ -66,7 +66,7 @@ flutter run
 
 Hi! I'm Harvz, the developer of this project. Let's get connected!
 
-<a href="https://hrvzz.com"><img src="raw/website-icon.png" width="60"></a>
+<a href="https://harveyjavier.github.io"><img src="raw/website-icon.png" width="60"></a>
 <a href="https://play.google.com/store/apps/dev?id=4935714394750436171"><img src="raw/play-store-icon.png" width="60"></a>
 <a href="https://www.linkedin.com/in/harvz/"><img src="raw/linkedin-icon.png" width="60"></a>
 <a href="https://www.facebook.com/harvzjavier"><img src="raw/facebook-icon.png" width="60"></a>
